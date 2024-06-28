@@ -1,8 +1,0 @@
-[
-{
-  "directory": "C:/Users/79610/Projects/ChessTPU/build",
-  "command": "C:\\msys64\\mingw64\\bin\\c++.exe -g -o CMakeFiles\\ChessTPU.dir\\main.cpp.obj -c C:\\Users\\79610\\Projects\\ChessTPU\\main.cpp",
-  "file": "C:\\Users\\79610\\Projects\\ChessTPU\\main.cpp",
-  "output": "CMakeFiles\\ChessTPU.dir\\main.cpp.obj"
-}
-]

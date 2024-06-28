@@ -1,5 +1,6 @@
 #include "DraggableWidget.h"
 #include <QVBoxLayout>
+#include <QDebug>
 
 DraggableWidget::DraggableWidget(const QString &imagePath, QWidget *parent) : QWidget(parent), dragging(false), grid({0,0,0,0,0,0,false})
 {
@@ -86,12 +87,14 @@ void DraggableWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         dragging = false;
-        //if(pos().x() < grid.x || pos().x() > grid.x + grid.w || pos().y() < grid.y || pos().y() > grid.y + grid.h) return;
-        int x = (pos().x() + grid.x - grid.dx/2) / grid.dx * grid.dx + grid.x;
-        int y = (pos().y() + grid.y - grid.dy/2) / grid.dy * grid.dy + grid.y;
-        if(x <= grid.x || y <= grid.y || x >= grid.x + grid.w || y >= grid.y + grid.h){
+        if(!grid.f) return;
+        int xCenter = pos().x() + size().width() / 2;
+        int yCenter = pos().y() + size().height() / 2;
+        if( xCenter < grid.x || xCenter >= grid.x + grid.w || yCenter < grid.y || yCenter >= grid.y + grid.h) {
             move(previousPosition);
-        }else{
+        } else {
+            int x = (xCenter - grid.x) / grid.dx * grid.dx + grid.x;
+            int y = (yCenter - grid.y) / grid.dy * grid.dy + grid.y;
             move(x, y);
         }
     }

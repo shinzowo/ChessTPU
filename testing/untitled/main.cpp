@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 
     board.setPixmap(image);
     board.resize(image.size());
-    board.move(40, 40);
+    board.move(140, 140);
 
     QString imagePath = ":/img/wk75.png";
     DraggableWidget *draggableWidget = new DraggableWidget(imagePath, &mainWindow);

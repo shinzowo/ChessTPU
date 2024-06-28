@@ -1,3 +1,0 @@
-C:/Users/79610/Projects/ChessTPU/build/CMakeFiles/ChessTPU.dir
-C:/Users/79610/Projects/ChessTPU/build/CMakeFiles/edit_cache.dir
-C:/Users/79610/Projects/ChessTPU/build/CMakeFiles/rebuild_cache.dir
