@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>img/wk.png</file>
+        <file>img/board.png</file>
+        <file>img/wk50.png</file>
+        <file>img/wk75.png</file>
     </qresource>
 </RCC>

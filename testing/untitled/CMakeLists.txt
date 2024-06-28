@@ -25,7 +25,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         DraggableWidget.h
         DraggableWidget.cpp
-        img/wk.png
+        img/board.png img/wk50.png img/wk75.png
         res.qrc
 
     )
