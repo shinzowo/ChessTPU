@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>img/board.png</file>
+        <file>img/wk50.png</file>
+        <file>img/wk75.png</file>
+        <file>img/pieces600/bb.png</file>
+        <file>img/pieces600/bk.png</file>
+        <file>img/pieces600/bn.png</file>
+        <file>img/pieces600/bp.png</file>
+        <file>img/pieces600/bq.png</file>
+        <file>img/pieces600/br.png</file>
+        <file>img/pieces600/wb.png</file>
+        <file>img/pieces600/wk.png</file>
+        <file>img/pieces600/wn.png</file>
+        <file>img/pieces600/wp.png</file>
+        <file>img/pieces600/wq.png</file>
+        <file>img/pieces600/wr.png</file>
+    </qresource>
+</RCC>

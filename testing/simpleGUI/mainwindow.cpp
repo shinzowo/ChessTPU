@@ -1,7 +1,12 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include <QGraphicsDropShadowEffect>
+#include <QLabel>
+#include "DraggableWidget.h"
+#include <vector>
 
+bool flag = false;
+std::vector<DraggableWidget*> pie;
 enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui};
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -10,7 +15,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setStyleOnbutton();
     ui->widget_2->setVisible(false);
+    this->resize(800, 630);
 
+    // auto board = new QLabel(ui->square);
+    // auto pixmap = new QPixmap(":/img/board.png");
+    // board->setPixmap(*pixmap);
+    // board->setAlignment(Qt::AlignCenter);
+
+    // QVBoxLayout *layout = new QVBoxLayout(ui->square);
+    // layout->addWidget(board);
+    // layout->setContentsMargins(0, 0, 0, 0);
+    // ui->square->setLayout(layout);
 
 }
 
@@ -77,6 +92,7 @@ void MainWindow::setStyleOnbutton(){
 
     ui->BackFromPuzzlesButton->setStyleSheet(buttonStyle);
 }
+
 void MainWindow::apply_shadow(QWidget *widget){
     QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect(widget);
     shadowEffect->setBlurRadius(5);
@@ -84,77 +100,158 @@ void MainWindow::apply_shadow(QWidget *widget){
     shadowEffect->setColor(Qt::black);
     widget->setGraphicsEffect(shadowEffect);
 }
+
 void MainWindow::on_ClassicGameButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(choose_ui);
 }
-
 
 void MainWindow::on_FischerChessButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(choose_ui);
 }
 
-
 void MainWindow::on_ThreeCheckButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(choose_ui);
 }
-
 
 void MainWindow::on_PuzzleButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(puzzle_ui);
 }
 
-
 void MainWindow::on_QuitButton_clicked()
 {
     this->close();
 }
 
-
 void MainWindow::on_TwoPlayersButton_clicked()
 {
+    if(flag) return;
+    flag = true;
+    //QVBoxLayout *layout = new QVBoxLayout(ui->square);
+    QSize size =  ui->board->size();
+    int cell_size = size.height() / 8;
+    std::vector<DraggableWidget*> pieces;
+    pieces.push_back(new DraggableWidget(":/img/pieces600/br.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bn.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bb.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bq.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bk.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bb.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bn.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/br.png", this));
+
+
+
+    for (int i = 0; i < 8; ++i){
+        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
+        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y(), cell_size, cell_size);
+        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
+        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
+        pieces[i]->setStyleSheet("background: transparent;");
+        pieces[i]->show();
+        pie.push_back(pieces[i]);
+    }
+
+    pieces.clear();
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wr.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wn.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wb.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wq.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wk.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wb.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wn.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wr.png", this));
+
+    for (int i = 0; i < 8; ++i){
+        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
+        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y() + 7 * cell_size, cell_size, cell_size);
+        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
+        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
+        pieces[i]->setStyleSheet("background: transparent;");
+        pieces[i]->show();
+        pie.push_back(pieces[i]);
+    }
+
+    pieces.clear();
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
+
+    for (int i = 0; i < 8; ++i){
+        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
+        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y() + 6 * cell_size, cell_size, cell_size);
+        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
+        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
+        pieces[i]->setStyleSheet("background: transparent;");
+        pieces[i]->show();
+        pie.push_back(pieces[i]);
+    }
+
+    pieces.clear();
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
+
+    for (int i = 0; i < 8; ++i){
+        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
+        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y() + 1 * cell_size, cell_size, cell_size);
+        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
+        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
+        pieces[i]->setStyleSheet("background: transparent;");
+        pieces[i]->show();
+        pie.push_back(pieces[i]);
+    }
+
 
 }
-
 
 void MainWindow::on_BotButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(side_ui);
 }
 
-
 void MainWindow::on_BackButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(base_ui);
+    flag = false;
+    for (auto p : pie) {
+        p->close();
+    }
+    pie.clear();
 }
-
 
 void MainWindow::on_WhiteButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(game_ui);
 }
 
-
 void MainWindow::on_RandomButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(game_ui);
 }
-
 
 void MainWindow::on_BlackButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(game_ui);
 }
 
-
 void MainWindow::on_BackToChooseUIButton_clicked()
 {
      ui->stackedWidget->setCurrentIndex(choose_ui);
 }
-
 
 void MainWindow::on_ResignButton_clicked()
 {
@@ -172,12 +269,10 @@ void MainWindow::on_FalseResignButton_clicked()
     ui->widget_2->setVisible(false);
 }
 
-
-
-
-
 void MainWindow::on_BackFromPuzzlesButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(base_ui);
 }
+
+
 

@@ -17,13 +17,21 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        SquareWidget.h SquareWidget.cpp
 )
+
+include_directories(${CMAKE_SOURCE_DIR})
+
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ChessM
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         mainwindow3.ui
+        res.qrc
+        DraggableWidget.cpp
+        DraggableWidget.h
+
 
 
 
