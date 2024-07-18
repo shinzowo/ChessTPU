@@ -117,7 +117,7 @@
           <property name="bottomMargin">
            <number>0</number>
           </property>
-          <item row="0" column="0">
+          <item row="0" column="0" alignment="Qt::AlignmentFlag::AlignHCenter|Qt::AlignmentFlag::AlignVCenter">
            <widget class="QLabel" name="board">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -129,7 +129,7 @@
              <string/>
             </property>
             <property name="pixmap">
-             <pixmap resource="../untitled/res.qrc">:/img/board.png</pixmap>
+             <pixmap resource="res.qrc">:/img/board.png</pixmap>
             </property>
             <property name="scaledContents">
              <bool>true</bool>
@@ -166,7 +166,7 @@
        </size>
       </property>
       <property name="styleSheet">
-       <string notr="true">background-color:&quot;#2F4858&quot;;</string>
+       <string notr="true">background-color:&quot;#2F4858&quot;;  </string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <property name="sizeConstraint">
@@ -178,7 +178,7 @@
           <string notr="true">background-color:&quot;#4D616F&quot;;</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout" stretch="20,19,0,19,0,19,0,19,0,19,0">
@@ -210,7 +210,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Arial</family>
+               <family>Segoe UI Black</family>
                <pointsize>30</pointsize>
                <bold>true</bold>
                <kerning>true</kerning>
@@ -247,8 +247,28 @@
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LayoutDirection::LeftToRight</enum>
+             </property>
              <property name="text">
               <string>Классическая игра</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res.qrc">
+               <normaloff>:/icons/icons/ClassicGameBIcon.svg</normaloff>:/icons/icons/ClassicGameBIcon.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>25</width>
+               <height>24</height>
+              </size>
              </property>
              <property name="flat">
               <bool>false</bool>
@@ -288,8 +308,25 @@
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Шахматы Фишера</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res.qrc">
+               <normaloff>:/icons/icons/FischerIcon.svg</normaloff>:/icons/icons/FischerIcon.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
              </property>
              <property name="flat">
               <bool>false</bool>
@@ -329,8 +366,25 @@
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Три шаха</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res.qrc">
+               <normaloff>:/icons/icons/ThreeCheckButtonIcon.svg</normaloff>:/icons/icons/ThreeCheckButtonIcon.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
              </property>
              <property name="flat">
               <bool>false</bool>
@@ -370,8 +424,25 @@
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Задачи</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res.qrc">
+               <normaloff>:/icons/icons/PuzzlesButtonIcon.svg</normaloff>:/icons/icons/PuzzlesButtonIcon.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
              </property>
              <property name="flat">
               <bool>false</bool>
@@ -411,8 +482,25 @@
                <height>100</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Выход</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res.qrc">
+               <normaloff>:/icons/icons/ExitButtonIcon.svg</normaloff>:/icons/icons/ExitButtonIcon.svg</iconset>
+             </property>
+             <property name="iconSize">
+              <size>
+               <width>25</width>
+               <height>25</height>
+              </size>
              </property>
              <property name="flat">
               <bool>false</bool>
@@ -464,7 +552,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Arial</family>
+               <family>Segoe UI Black</family>
                <pointsize>30</pointsize>
                <bold>true</bold>
                <kerning>true</kerning>
@@ -503,6 +591,13 @@
                  <height>70</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
                 <string>Бот</string>
                </property>
@@ -531,8 +626,15 @@
                  <height>70</height>
                 </size>
                </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="text">
-                <string>Два Игрока</string>
+                <string>Два игрока</string>
                </property>
                <property name="flat">
                 <bool>false</bool>
@@ -574,6 +676,13 @@
                <height>70</height>
               </size>
              </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
+             </property>
              <property name="text">
               <string>Назад</string>
              </property>
@@ -585,10 +694,7 @@
           </layout>
          </widget>
          <widget class="QWidget" name="page_3">
-          <layout class="QVBoxLayout" name="verticalLayout_3" stretch="20,19,0,19">
-           <property name="spacing">
-            <number>25</number>
-           </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
            <property name="leftMargin">
             <number>11</number>
            </property>
@@ -614,7 +720,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Arial</family>
+               <family>Segoe UI Black</family>
                <pointsize>30</pointsize>
                <bold>true</bold>
                <kerning>true</kerning>
@@ -642,7 +748,17 @@
                 </size>
                </property>
                <property name="text">
-                <string>Белые</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="res.qrc">
+                 <normaloff>:/img/pieces600/wk.png</normaloff>:/img/pieces600/wk.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>70</width>
+                 <height>70</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -655,7 +771,17 @@
                 </size>
                </property>
                <property name="text">
-                <string>Случайно</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="res.qrc">
+                 <normaloff>:/icons/icons/wb_king.png</normaloff>:/icons/icons/wb_king.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>70</width>
+                 <height>70</height>
+                </size>
                </property>
               </widget>
              </item>
@@ -668,7 +794,168 @@
                 </size>
                </property>
                <property name="text">
-                <string>Черные</string>
+                <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="res.qrc">
+                 <normaloff>:/img/pieces600/bk.png</normaloff>:/img/pieces600/bk.png</iconset>
+               </property>
+               <property name="iconSize">
+                <size>
+                 <width>70</width>
+                 <height>70</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item alignment="Qt::AlignmentFlag::AlignHCenter">
+            <widget class="QLabel" name="diff_label">
+             <property name="text">
+              <string>Уровень сложности</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <widget class="QPushButton" name="diff_1">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>1</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="diff_2">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>2</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="diff_3">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>3</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="diff_4">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>4</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="diff_5">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>5</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="diff_6">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>6</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="diff_7">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>7</string>
                </property>
               </widget>
              </item>
@@ -694,6 +981,13 @@
                <width>0</width>
                <height>70</height>
               </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Segoe UI Semibold</family>
+               <pointsize>12</pointsize>
+               <bold>true</bold>
+              </font>
              </property>
              <property name="text">
               <string>Назад</string>
@@ -732,7 +1026,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Arial</family>
+               <family>Segoe UI Black</family>
                <pointsize>30</pointsize>
                <bold>true</bold>
                <kerning>true</kerning>
@@ -755,8 +1049,9 @@
               <widget class="QLabel" name="label">
                <property name="font">
                 <font>
+                 <family>Segoe UI Semibold</family>
                  <pointsize>12</pointsize>
-                 <bold>false</bold>
+                 <bold>true</bold>
                 </font>
                </property>
                <property name="styleSheet">
@@ -796,7 +1091,7 @@
             </spacer>
            </item>
            <item>
-            <widget class="QWidget" name="widget_2" native="true">
+            <widget class="QWidget" name="widget_save" native="true">
              <property name="minimumSize">
               <size>
                <width>0</width>
@@ -804,70 +1099,66 @@
               </size>
              </property>
              <property name="styleSheet">
-              <string notr="true">background-color:&quot;#D9D9D9&quot;; border-radius: 10px;</string>
+              <string notr="true">background-color:&quot;#e3e3e3&quot;; border-radius:5px;</string>
              </property>
-             <layout class="QVBoxLayout" name="verticalLayout_5">
-              <item alignment="Qt::AlignmentFlag::AlignHCenter">
-               <widget class="QLabel" name="label_2">
+             <layout class="QHBoxLayout" name="horizontalLayout_11">
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="PGNButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
                 <property name="font">
                  <font>
-                  <pointsize>20</pointsize>
-                  <bold>false</bold>
+                  <family>Segoe UI Semibold</family>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
                  </font>
                 </property>
                 <property name="styleSheet">
-                 <string notr="true">QLabel{color:#000000;}</string>
+                 <string notr="true">background-color:&quot;#232E35&quot;;</string>
                 </property>
                 <property name="text">
-                 <string>Сдаться?</string>
+                 <string>PGN</string>
                 </property>
                </widget>
               </item>
               <item>
-               <layout class="QHBoxLayout" name="horizontalLayout_5">
-                <item>
-                 <widget class="QPushButton" name="TrueResignButton">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:&quot;#3D4E59&quot;;</string>
-                  </property>
-                  <property name="text">
-                   <string>Да</string>
-                  </property>
-                 </widget>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="FalseResignButton">
-                  <property name="minimumSize">
-                   <size>
-                    <width>0</width>
-                    <height>30</height>
-                   </size>
-                  </property>
-                  <property name="font">
-                   <font>
-                    <pointsize>12</pointsize>
-                   </font>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true">background-color:&quot;#3D4E59&quot;;</string>
-                  </property>
-                  <property name="text">
-                   <string>Нет</string>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <widget class="QPushButton" name="FENButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Segoe UI Semibold</family>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">background-color:&quot;#232E35&quot;;</string>
+                </property>
+                <property name="text">
+                 <string>FEN</string>
+                </property>
+               </widget>
               </item>
              </layout>
             </widget>
@@ -884,12 +1175,72 @@
               <string notr="true">background-color:&quot;#232E35&quot;; border-radius: 10px;</string>
              </property>
              <layout class="QHBoxLayout" name="horizontalLayout_6">
-              <item alignment="Qt::AlignmentFlag::AlignRight">
+              <property name="leftMargin">
+               <number>10</number>
+              </property>
+              <property name="topMargin">
+               <number>10</number>
+              </property>
+              <property name="rightMargin">
+               <number>10</number>
+              </property>
+              <property name="bottomMargin">
+               <number>10</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="saveGameButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>50</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="res.qrc">
+                  <normaloff>:/icons/icons/save.svg</normaloff>:/icons/icons/save.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>25</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
                <widget class="QPushButton" name="ResignButton">
                 <property name="minimumSize">
                  <size>
-                  <width>70</width>
+                  <width>50</width>
                   <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
                  </size>
                 </property>
                 <property name="font">
@@ -898,7 +1249,40 @@
                  </font>
                 </property>
                 <property name="text">
-                 <string>Сдаться</string>
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="res.qrc">
+                  <normaloff>:/icons/icons/surrender.svg</normaloff>:/icons/icons/surrender.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>25</width>
+                  <height>25</height>
+                 </size>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="cancelResignButton">
+                <property name="minimumSize">
+                 <size>
+                  <width>30</width>
+                  <height>30</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>30</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+                <property name="icon">
+                 <iconset resource="res.qrc">
+                  <normaloff>:/icons/icons/delete-1--remove-add-button-buttons-delete-cross-x-mathematics-multiply-math.svg</normaloff>:/icons/icons/delete-1--remove-add-button-buttons-delete-cross-x-mathematics-multiply-math.svg</iconset>
                 </property>
                </widget>
               </item>
@@ -937,7 +1321,7 @@
              </property>
              <property name="font">
               <font>
-               <family>Arial</family>
+               <family>Segoe UI Black</family>
                <pointsize>20</pointsize>
                <bold>true</bold>
                <kerning>true</kerning>
@@ -961,16 +1345,24 @@
             <widget class="QWidget" name="Pieces" native="true">
              <property name="minimumSize">
               <size>
-               <width>200</width>
-               <height>100</height>
+               <width>0</width>
+               <height>180</height>
               </size>
              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5"/>
             </widget>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_9">
              <item>
               <widget class="QLabel" name="white_castl">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true">color:&quot;#ffffff&quot;</string>
                </property>
@@ -981,6 +1373,13 @@
              </item>
              <item>
               <widget class="QLabel" name="black_castl">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true">color:&quot;#ffffff&quot;</string>
                </property>
@@ -995,6 +1394,13 @@
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <item>
               <widget class="QCheckBox" name="white00">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true">color:&quot;#ffffff&quot;</string>
                </property>
@@ -1005,6 +1411,13 @@
              </item>
              <item>
               <widget class="QCheckBox" name="black00">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true">color:&quot;#ffffff&quot;</string>
                </property>
@@ -1019,6 +1432,13 @@
             <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
               <widget class="QCheckBox" name="white000">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true">color:&quot;#ffffff&quot;</string>
                </property>
@@ -1029,6 +1449,13 @@
              </item>
              <item>
               <widget class="QCheckBox" name="black000">
+               <property name="font">
+                <font>
+                 <family>Segoe UI Semibold</family>
+                 <pointsize>12</pointsize>
+                 <bold>true</bold>
+                </font>
+               </property>
                <property name="styleSheet">
                 <string notr="true">color:&quot;#ffffff&quot;</string>
                </property>
@@ -1072,6 +1499,13 @@
                 <height>24</height>
                </rect>
               </property>
+              <property name="font">
+               <font>
+                <family>Segoe UI Semibold</family>
+                <pointsize>12</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
               <property name="text">
                <string>Назад</string>
               </property>
@@ -1096,6 +1530,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="res.qrc"/>
+ </resources>
  <connections/>
 </ui>

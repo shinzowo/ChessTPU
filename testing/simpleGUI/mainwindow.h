@@ -45,11 +45,29 @@ private slots:
 
     void on_ResignButton_clicked();
 
-    void on_FalseResignButton_clicked();
-
-    void on_TrueResignButton_clicked();
-
     void on_BackFromPuzzlesButton_clicked();
+
+    void on_diff_1_clicked();
+
+    void on_diff_2_clicked();
+
+    void on_diff_3_clicked();
+
+    void on_diff_4_clicked();
+
+    void on_diff_5_clicked();
+
+    void on_diff_6_clicked();
+
+    void on_diff_7_clicked();
+
+    void on_saveGameButton_clicked();
+
+    void on_cancelResignButton_clicked();
+
+    void on_FENButton_clicked();
+
+    void on_PGNButton_clicked();
 
 private:
 
@@ -58,7 +76,17 @@ private:
     void apply_shadow(QWidget *widget);
     QString baseColorButton;
     QString buttonStyle;
+    QString text_align_style;
+
+    QString clickedDiffButton;
+    QString buttonDiffStyle;
+    QString buttonDiffStyleClicked;
     QString textColor;
     QString hoverColor;
+
+
+    int game_diff;
+    QPushButton *lastClickedButton;
+    bool confirmResign=false;
 };
 #endif // MAINWINDOW_H

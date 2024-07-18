@@ -16,4 +16,15 @@
         <file>img/pieces600/wq.png</file>
         <file>img/pieces600/wr.png</file>
     </qresource>
+    <qresource prefix="/icons">
+        <file>icons/ClassicGameBIcon.svg</file>
+        <file>icons/ExitButtonIcon.svg</file>
+        <file>icons/FischerIcon.svg</file>
+        <file>icons/PuzzlesButtonIcon.svg</file>
+        <file>icons/ThreeCheckButtonIcon.svg</file>
+        <file>icons/delete-1--remove-add-button-buttons-delete-cross-x-mathematics-multiply-math.svg</file>
+        <file>icons/surrender.svg</file>
+        <file>icons/save.svg</file>
+        <file>icons/wb_king.png</file>
+    </qresource>
 </RCC>
