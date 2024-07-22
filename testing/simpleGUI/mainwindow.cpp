@@ -1,14 +1,18 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include <vector>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
 #include "DraggableWidget.h"
-#include <vector>
+#include <QMessageBox>
+#include <QInputDialog>
+#include <QList>
+
 
 
 bool flag = false;
 std::vector<DraggableWidget*> pie;
-enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui};
+enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui, edit_ui};
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -16,16 +20,51 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setStyleOnbutton();
 
-    this->resize(800, 630);
+
 
     //Установка базовых параметром для компонентов меню
     game_diff=4;
     lastClickedButton=ui->diff_4;
-
+    lastClickedToolButton=ui->moveButton;
 
     ui->cancelResignButton->setVisible(false);
+    ui->LoadPositionButton->setVisible(false);
+    ui->DeletePositionButton->setVisible(false);
+
+    ui->PiecePanel1->setVisible(false);
+    ui->PiecePanel1_2->setVisible(false);
+
+    connect(ui->savesProblemWidget, &QListWidget::itemClicked,
+                this, &MainWindow::onItemClicked);
+
+
     ui->widget->setContentsMargins(40, 10, 40, 10);
     ui->widget_save->hide();
+
+    //Коннект кнопок общей функции
+
+
+    connect(ui->moveButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->deleteButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->wkButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->wqButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->wrButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->wbButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->wnButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->wpButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+
+    connect(ui->bkButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->bqButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->brButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->bbButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->bnButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+    connect(ui->bpButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
+
+
+
+    chessGame=new game(ui->graphicsView, this);
+
+
 
 
     // auto board = new QLabel(ui->square);
@@ -38,6 +77,14 @@ MainWindow::MainWindow(QWidget *parent)
     // layout->setContentsMargins(0, 0, 0, 0);
     // ui->square->setLayout(layout);
 
+}
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event);
+    if (ui->graphicsView && ui->graphicsView->scene()) {
+        QRectF sceneRect=ui->graphicsView->scene()->sceneRect();
+        ui->graphicsView->setSceneRect(sceneRect);
+        ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -104,7 +151,14 @@ void MainWindow::setStyleOnbutton(){
 
     ui->cancelResignButton->setStyleSheet(buttonStyle);
 
+    ui->EditPuzzleButton->setStyleSheet(buttonStyle);
     ui->BackFromPuzzlesButton->setStyleSheet(buttonStyle);
+
+    ui->SavePositionButton->setStyleSheet(buttonStyle);
+    ui->BackFromEditButton->setStyleSheet(buttonStyle);
+    ui->LoadPositionButton->setStyleSheet(buttonStyle);
+    ui->DeletePositionButton->setStyleSheet(buttonStyle);
+
 
     ui->PGNButton->setStyleSheet(buttonStyle);
     apply_shadow(ui->PGNButton);
@@ -140,6 +194,17 @@ void MainWindow::setStyleOnbutton(){
 
     ui->diff_7->setStyleSheet(buttonDiffStyle);
     apply_shadow(ui->diff_7);
+
+    //Кнопки выбора фигур
+    QList<QPushButton*> toolsButtons=ui->PiecePanel1->findChildren<QPushButton*>();
+    for(QPushButton *toolBut: toolsButtons){
+        toolBut->setStyleSheet(buttonDiffStyle);
+    }
+    toolsButtons=ui->PiecePanel1_2->findChildren<QPushButton*>();
+    for(QPushButton *toolBut: toolsButtons){
+        toolBut->setStyleSheet(buttonDiffStyle);
+    }
+
 }
 
 void MainWindow::apply_shadow(QWidget *widget){
@@ -167,34 +232,9 @@ void MainWindow::on_ThreeCheckButton_clicked()
 
 void MainWindow::on_PuzzleButton_clicked()
 {
-
-    if(flag) return;
-    flag = true;
     ui->stackedWidget->setCurrentIndex(puzzle_ui);
-    int cell_size = 50;
-    std::vector<DraggableWidget*> pieces;
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wr.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wn.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wb.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wq.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wk.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/br.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bn.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bb.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bq.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bk.png", this));
-    for(int i=0;i<12;i++){
-        pieces[i]->setGeometry(ui->Pieces->pos().x()+cell_size*i, ui->Pieces->pos().y(), cell_size, cell_size);
 
-        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
-        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
-        pieces[i]->setStyleSheet("background: transparent;");
-        pieces[i]->show();
-        pie.push_back(pieces[i]);
-    }
-    pieces.clear();
+
 }
 
 void MainWindow::on_QuitButton_clicked()
@@ -204,6 +244,7 @@ void MainWindow::on_QuitButton_clicked()
 
 void MainWindow::on_TwoPlayersButton_clicked()
 {
+    /*
     if(flag) return;
     flag = true;
     //QVBoxLayout *layout = new QVBoxLayout(ui->square);
@@ -291,7 +332,7 @@ void MainWindow::on_TwoPlayersButton_clicked()
         pie.push_back(pieces[i]);
     }
 
-
+    */
 }
 
 void MainWindow::on_BotButton_clicked()
@@ -370,18 +411,57 @@ void MainWindow::on_saveGameButton_clicked()
 
 }
 
+void MainWindow::on_EditPuzzleButton_clicked()
+{
+   ui->stackedWidget->setCurrentIndex(edit_ui);
+   ui->PiecePanel1->setVisible(true);
+   ui->PiecePanel1_2->setVisible(true);
+}
+
 void MainWindow::on_BackFromPuzzlesButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(base_ui);
-    flag=false;
-    for (auto p : pie) {
-        p->close();
-    }
-    pie.clear();
 }
 
+void MainWindow::on_SavePositionButton_clicked()
+{
+    bool ok;
+    fileName = QInputDialog::getText(nullptr, "Save As", "Enter file name:", QLineEdit::Normal, "", &ok);
+    if (ok && !fileName.isEmpty()) {
+            QMessageBox::information(nullptr, "File Name", "You entered: " + fileName);
+            // Здесь добавить код для сохранения файла с указанным именем
+    } else {
+            QMessageBox::warning(nullptr, "Input Error", "File name cannot be empty.");
+    }
+    ui->savesProblemWidget->addItem(fileName);
+}
 
+void MainWindow::on_BackFromEditButton_clicked()
+{
+    if(ui->LoadPositionButton->isVisible()==false){
+        ui->stackedWidget->setCurrentIndex(puzzle_ui);
+        ui->PiecePanel1->setVisible(false);
+        ui->PiecePanel1_2->setVisible(false);
+    }
+    else{
+        ui->LoadPositionButton->setVisible(false);
+        ui->DeletePositionButton->setVisible(false);
+        ui->SavePositionButton->setVisible(true);
+    }
+}
 
+void MainWindow::on_LoadPositionButton_clicked()
+{
+
+}
+
+void MainWindow::on_DeletePositionButton_clicked()
+{
+     QListWidgetItem *selectedItem = ui->savesProblemWidget->currentItem();
+     if(selectedItem){
+         delete selectedItem;
+     }
+}
 
 void MainWindow::on_diff_1_clicked()
 {
@@ -391,7 +471,6 @@ void MainWindow::on_diff_1_clicked()
     game_diff=1;
 
 }
-
 
 void MainWindow::on_diff_2_clicked()
 {
@@ -441,20 +520,47 @@ void MainWindow::on_diff_7_clicked()
     game_diff=7;
 }
 
-
-
-
-
-
-
 void MainWindow::on_FENButton_clicked()
 {
     ui->widget_save->hide();
 }
 
-
 void MainWindow::on_PGNButton_clicked()
 {
     ui->widget_save->hide();
 }
+
+void MainWindow::on_tool_button_clicked(){
+
+    QPushButton *clickedToolButton = qobject_cast<QPushButton*>(sender());
+    if(!clickedToolButton){
+        return;
+    }
+    if(lastClickedToolButton){
+        lastClickedToolButton->setStyleSheet(buttonDiffStyle);
+    }
+    clickedToolButton->setStyleSheet(buttonDiffStyleClicked);
+    lastClickedToolButton=clickedToolButton;
+}
+
+void MainWindow::onItemClicked(QListWidgetItem *item) {
+    // Обработка события клика на элемент
+    qDebug() << "Item clicked:" << item->text();
+    ui->LoadPositionButton->setVisible(true);
+    ui->DeletePositionButton->setVisible(true);
+    ui->SavePositionButton->setVisible(false);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 

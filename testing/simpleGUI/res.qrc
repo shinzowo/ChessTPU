@@ -26,5 +26,7 @@
         <file>icons/surrender.svg</file>
         <file>icons/save.svg</file>
         <file>icons/wb_king.png</file>
+        <file>icons/moveButtonIcon.svg</file>
+        <file>icons/recycleBinButtonIcon.svg</file>
     </qresource>
 </RCC>

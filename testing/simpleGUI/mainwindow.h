@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QListWidgetItem>
+#include "game.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -45,6 +47,8 @@ private slots:
 
     void on_ResignButton_clicked();
 
+    void on_EditPuzzleButton_clicked();
+
     void on_BackFromPuzzlesButton_clicked();
 
     void on_diff_1_clicked();
@@ -69,9 +73,21 @@ private slots:
 
     void on_PGNButton_clicked();
 
+    void on_SavePositionButton_clicked();
+
+    void on_BackFromEditButton_clicked();
+
+    void onItemClicked(QListWidgetItem *item);
+
+    void on_LoadPositionButton_clicked();
+
+    void on_DeletePositionButton_clicked();
+    void on_tool_button_clicked();
+
 private:
 
     Ui::MainWindow *ui;
+    game *chessGame;
     void setStyleOnbutton();
     void apply_shadow(QWidget *widget);
     QString baseColorButton;
@@ -84,9 +100,14 @@ private:
     QString textColor;
     QString hoverColor;
 
+    QString fileName;
+
 
     int game_diff;
     QPushButton *lastClickedButton;
+    QPushButton *lastClickedToolButton;
     bool confirmResign=false;
+protected:
+    void resizeEvent(QResizeEvent *event) override;
 };
 #endif // MAINWINDOW_H

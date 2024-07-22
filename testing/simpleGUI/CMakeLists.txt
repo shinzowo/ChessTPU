@@ -31,6 +31,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         res.qrc
         DraggableWidget.cpp
         DraggableWidget.h
+        game.h game.cpp
+        chessBoard.h
+        chessBoard.cpp
+        gridpixmapitem.h gridpixmapitem.cpp
 
 
 
