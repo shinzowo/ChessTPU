@@ -558,7 +558,7 @@
           <string notr="true">background-color:&quot;#4D616F&quot;;</string>
          </property>
          <property name="currentIndex">
-          <number>5</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="page">
           <layout class="QVBoxLayout" name="verticalLayout" stretch="20,19,0,19,0,19,0,19,0,19,0">

@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QListWidgetItem>
 #include "game.h"
+//#include "ChessBot.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -51,19 +52,7 @@ private slots:
 
     void on_BackFromPuzzlesButton_clicked();
 
-    void on_diff_1_clicked();
-
-    void on_diff_2_clicked();
-
-    void on_diff_3_clicked();
-
-    void on_diff_4_clicked();
-
-    void on_diff_5_clicked();
-
-    void on_diff_6_clicked();
-
-    void on_diff_7_clicked();
+    void on_diffButton_clicked();
 
     void on_saveGameButton_clicked();
 
@@ -84,12 +73,21 @@ private slots:
     void on_DeletePositionButton_clicked();
     void on_tool_button_clicked();
 
+    //void onEngineOutputReceived(const QString &output);
+
+
 private:
 
     Ui::MainWindow *ui;
     game *chessGame;
+    //ChessBot *chessBot;
+
+
+    void setupBaseParametres();
     void setStyleOnbutton();
     void apply_shadow(QWidget *widget);
+
+
     QString baseColorButton;
     QString buttonStyle;
     QString text_align_style;
@@ -104,7 +102,7 @@ private:
 
 
     int game_diff;
-    QPushButton *lastClickedButton;
+    QPushButton *lastClickedDiffButton;
     QPushButton *lastClickedToolButton;
     bool confirmResign=false;
 protected:

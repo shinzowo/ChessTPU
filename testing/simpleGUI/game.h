@@ -4,7 +4,8 @@
 #include <QObject>
 #include <QGraphicsView>
 #include "chessBoard.h"
-#include <QDebug>  // For qWarning()
+#include "gridpixmapitem.h"
+#include <QMap>
 
 class game : public QObject
 {
@@ -20,7 +21,11 @@ private:
     int game_difficulty;
     int game_mode;
     chessBoard* board;
+    QMap<QString, GridPixmapItem*>boardState;
     QGraphicsView* graphicsView;
+
+    void setGame();
+
 
 signals:
 

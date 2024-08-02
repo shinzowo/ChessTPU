@@ -35,6 +35,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         chessBoard.h
         chessBoard.cpp
         gridpixmapitem.h gridpixmapitem.cpp
+        chessbot.h chessbot.cpp
 
 
 

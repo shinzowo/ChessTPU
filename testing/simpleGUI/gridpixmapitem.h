@@ -3,18 +3,48 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QPainterPath>
 #include <QVariant>
+#include <QString>
 
+
+
+enum{white, black};
 class GridPixmapItem : public QGraphicsPixmapItem
 {
 public:
-    GridPixmapItem(const QPixmap &pixmap, int gridSize, QGraphicsItem *parent = nullptr)
-        : QGraphicsPixmapItem(pixmap, parent), m_gridSize(gridSize) {}
+    GridPixmapItem(const QString pieceName, int gridSize, QGraphicsItem *parent = nullptr);
+    void setBoardState(QMap<QString, GridPixmapItem*>* state);
+    QString toChessNotaion(int x_sqr, int y_sqr);
+    QPointF toIntNotaion(QString square);
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+
+    QPainterPath shape() const override;
+
+
+
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 private:
+
+
+    QPixmap piecePixmap;
+
     int m_gridSize;
+    int side;
+
+    QPointF previousPosition;
+
+    QString previousSquare;
+    QString newSquare;
+
+    QMap<QString, GridPixmapItem *>*boardState;
+
+    qreal originalZvalue;
+
+    void updateBoardState();
+
 };
 
 #endif // GRIDPIXMAPITEM_H

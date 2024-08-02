@@ -3,7 +3,6 @@
 #include <vector>
 #include <QGraphicsDropShadowEffect>
 #include <QLabel>
-#include "DraggableWidget.h"
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QList>
@@ -11,20 +10,50 @@
 
 
 bool flag = false;
-std::vector<DraggableWidget*> pie;
+
 enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui, edit_ui};
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+    , ui(new Ui::MainWindow)/*,
+      chessBot(new ChessBot(this))*/
 {
     ui->setupUi(this);
+    setupBaseParametres();
+    chessGame=new game(ui->graphicsView, this);
+
+
+
+
+
+
+}
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event);
+    if (ui->graphicsView && ui->graphicsView->scene()) {
+        QRectF sceneRect=ui->graphicsView->scene()->sceneRect();
+        ui->graphicsView->setSceneRect(sceneRect);
+        ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }
+}
+
+MainWindow::~MainWindow()
+{
+    //chessBot->stopEngine();
+    delete ui;
+}
+
+/*
+void MainWindow::onEngineOutputReceived(const QString &output)
+{
+    qDebug() << "Engine output:" << output;
+    // Обработка вывода движка
+}*/
+
+void MainWindow::setupBaseParametres(){
     setStyleOnbutton();
-
-
-
     //Установка базовых параметром для компонентов меню
     game_diff=4;
-    lastClickedButton=ui->diff_4;
+    lastClickedDiffButton=ui->diff_4;
     lastClickedToolButton=ui->moveButton;
 
     ui->cancelResignButton->setVisible(false);
@@ -34,15 +63,24 @@ MainWindow::MainWindow(QWidget *parent)
     ui->PiecePanel1->setVisible(false);
     ui->PiecePanel1_2->setVisible(false);
 
+
+
     connect(ui->savesProblemWidget, &QListWidget::itemClicked,
                 this, &MainWindow::onItemClicked);
 
 
     ui->widget->setContentsMargins(40, 10, 40, 10);
     ui->widget_save->hide();
+    //Коннект кнопок общей функции для выбора сложности
+    connect(ui->diff_1, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
+    connect(ui->diff_2, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
+    connect(ui->diff_3, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
+    connect(ui->diff_4, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
+    connect(ui->diff_5, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
+    connect(ui->diff_6, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
+    connect(ui->diff_7, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
 
-    //Коннект кнопок общей функции
-
+    //Коннект кнопок общей функции для редактора
 
     connect(ui->moveButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
     connect(ui->deleteButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
@@ -60,36 +98,13 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->bnButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
     connect(ui->bpButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
 
-
-
-    chessGame=new game(ui->graphicsView, this);
-
-
-
-
-    // auto board = new QLabel(ui->square);
-    // auto pixmap = new QPixmap(":/img/board.png");
-    // board->setPixmap(*pixmap);
-    // board->setAlignment(Qt::AlignCenter);
-
-    // QVBoxLayout *layout = new QVBoxLayout(ui->square);
-    // layout->addWidget(board);
-    // layout->setContentsMargins(0, 0, 0, 0);
-    // ui->square->setLayout(layout);
-
-}
-void MainWindow::resizeEvent(QResizeEvent *event) {
-    QMainWindow::resizeEvent(event);
-    if (ui->graphicsView && ui->graphicsView->scene()) {
-        QRectF sceneRect=ui->graphicsView->scene()->sceneRect();
-        ui->graphicsView->setSceneRect(sceneRect);
-        ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
-    }
-}
-
-MainWindow::~MainWindow()
-{
-    delete ui;
+    /*/Бот
+    connect(chessBot, &ChessBot::outputReceived, this, &MainWindow::onEngineOutputReceived);
+    chessBot->startEngine("D:/projects/Fairy-stockfish/Fairy-Stockfish/src/stockfish.exe");
+    chessBot->sendCommand("uci");
+    chessBot->sendCommand("ucinewgame");
+    chessBot->sendCommand("position startpos moves e2e4 e7e5");
+    chessBot->sendCommand("go movetime 1000");*/
 }
 
 void MainWindow::setStyleOnbutton(){
@@ -244,95 +259,8 @@ void MainWindow::on_QuitButton_clicked()
 
 void MainWindow::on_TwoPlayersButton_clicked()
 {
-    /*
-    if(flag) return;
-    flag = true;
-    //QVBoxLayout *layout = new QVBoxLayout(ui->square);
-    QSize size =  ui->board->size();
-    int cell_size = size.height() / 8;
-    std::vector<DraggableWidget*> pieces;
-    pieces.push_back(new DraggableWidget(":/img/pieces600/br.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bn.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bb.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bq.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bk.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bb.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bn.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/br.png", this));
-
-
-
-    for (int i = 0; i < 8; ++i){
-        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
-        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y(), cell_size, cell_size);
-        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
-        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
-        pieces[i]->setStyleSheet("background: transparent;");
-        pieces[i]->show();
-        pie.push_back(pieces[i]);
-    }
-
-    pieces.clear();
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wr.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wn.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wb.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wq.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wk.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wb.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wn.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wr.png", this));
-
-    for (int i = 0; i < 8; ++i){
-        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
-        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y() + 7 * cell_size, cell_size, cell_size);
-        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
-        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
-        pieces[i]->setStyleSheet("background: transparent;");
-        pieces[i]->show();
-        pie.push_back(pieces[i]);
-    }
-
-    pieces.clear();
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/wp.png", this));
-
-    for (int i = 0; i < 8; ++i){
-        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
-        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y() + 6 * cell_size, cell_size, cell_size);
-        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
-        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
-        pieces[i]->setStyleSheet("background: transparent;");
-        pieces[i]->show();
-        pie.push_back(pieces[i]);
-    }
-
-    pieces.clear();
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-    pieces.push_back(new DraggableWidget(":/img/pieces600/bp.png", this));
-
-    for (int i = 0; i < 8; ++i){
-        pieces[i]->makeGrid(ui->empty_widget->pos().x(), ui->empty_widget->pos().y(), cell_size, cell_size, 8, 8);
-        pieces[i]->setGeometry(ui->empty_widget->pos().x() + cell_size * i, ui->empty_widget->pos().y() + 1 * cell_size, cell_size, cell_size);
-        pieces[i]->setAttribute(Qt::WA_TranslucentBackground, true);
-        pieces[i]->setAttribute(Qt::WA_OpaquePaintEvent, true);
-        pieces[i]->setStyleSheet("background: transparent;");
-        pieces[i]->show();
-        pie.push_back(pieces[i]);
-    }
-
-    */
+    ui->stackedWidget->setCurrentIndex(game_ui);
+    chessGame->startGame();
 }
 
 void MainWindow::on_BotButton_clicked()
@@ -343,11 +271,6 @@ void MainWindow::on_BotButton_clicked()
 void MainWindow::on_BackButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(base_ui);
-    flag = false;
-    for (auto p : pie) {
-        p->close();
-    }
-    pie.clear();
 }
 
 void MainWindow::on_WhiteButton_clicked()
@@ -381,7 +304,7 @@ void MainWindow::on_ResignButton_clicked()
         ui->widget->setContentsMargins(40, 10, 10+30, 10);
         ui->ResignButton->setStyleSheet(buttonStyle);
         confirmResign=false;
-        ui->stackedWidget->setCurrentIndex(side_ui);
+        ui->stackedWidget->setCurrentIndex(choose_ui);
 
     }
     else{
@@ -463,61 +386,17 @@ void MainWindow::on_DeletePositionButton_clicked()
      }
 }
 
-void MainWindow::on_diff_1_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_1->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_1;
-    game_diff=1;
-
-}
-
-void MainWindow::on_diff_2_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_2->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_2;
-    game_diff=2;
-}
-
-void MainWindow::on_diff_3_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_3->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_3;
-    game_diff=3;
-}
-
-void MainWindow::on_diff_4_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_4->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_4;
-    game_diff=4;
-}
-
-void MainWindow::on_diff_5_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_5->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_5;
-    game_diff=5;
-}
-
-void MainWindow::on_diff_6_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_6->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_6;
-    game_diff=6;
-}
-
-void MainWindow::on_diff_7_clicked()
-{
-    lastClickedButton->setStyleSheet(buttonDiffStyle);
-    ui->diff_7->setStyleSheet(buttonDiffStyleClicked);
-    lastClickedButton=ui->diff_7;
-    game_diff=7;
+void MainWindow::on_diffButton_clicked(){
+    QPushButton *clickedDiffButton=qobject_cast<QPushButton*>(sender());
+    if(!clickedDiffButton){
+        return;
+    }
+    QString buttonName = clickedDiffButton->objectName();
+    if(lastClickedDiffButton){
+        lastClickedDiffButton->setStyleSheet(buttonDiffStyle);
+    }
+    clickedDiffButton->setStyleSheet(buttonDiffStyleClicked);
+    lastClickedDiffButton=clickedDiffButton;
 }
 
 void MainWindow::on_FENButton_clicked()
@@ -536,6 +415,7 @@ void MainWindow::on_tool_button_clicked(){
     if(!clickedToolButton){
         return;
     }
+    QString buttonName = clickedToolButton->objectName();
     if(lastClickedToolButton){
         lastClickedToolButton->setStyleSheet(buttonDiffStyle);
     }
