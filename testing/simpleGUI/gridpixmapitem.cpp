@@ -21,7 +21,6 @@ GridPixmapItem::GridPixmapItem(const QString pieceName, int gridSize, QGraphicsI
     setTransformationMode(Qt::SmoothTransformation);
     previousPosition=pos();
 
-
 }
 
 QPainterPath GridPixmapItem::shape() const{
@@ -117,8 +116,27 @@ QPointF GridPixmapItem::toIntNotaion(QString square){
     return pos_piece;
 }
 
+void GridPixmapItem::setLastMove(QString *lastmove){
+    move=lastmove;
+}
+
+void GridPixmapItem::moveToSquare(QString toSquare){
+    previousSquare=toSquare.left(2);
+    newSquare=toSquare.right(2);
+    setPos(toIntNotaion(newSquare));
+    updateBoardState();
+}
+
 void GridPixmapItem::updateBoardState(){
     boardState->remove(previousSquare);
     (*boardState)[newSquare]=this;
-
+    *move=previousSquare+newSquare;
+    emit moveIsMade();
+    qDebug()<<"Move:"<<*move;
 }
+
+int GridPixmapItem::getGridSize(){
+    return m_gridSize;
+}
+
+

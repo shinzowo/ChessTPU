@@ -15,6 +15,7 @@
         <file>img/pieces600/wp.png</file>
         <file>img/pieces600/wq.png</file>
         <file>img/pieces600/wr.png</file>
+        <file>img/pboard.png</file>
     </qresource>
     <qresource prefix="/icons">
         <file>icons/ClassicGameBIcon.svg</file>

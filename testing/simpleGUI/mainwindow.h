@@ -76,13 +76,15 @@ private slots:
     //void onEngineOutputReceived(const QString &output);
 
 
+    void on_toMainMenuButton_clicked();
+
 private:
 
     Ui::MainWindow *ui;
     game *chessGame;
     //ChessBot *chessBot;
 
-
+    void adjustGraphicsViewSize();
     void setupBaseParametres();
     void setStyleOnbutton();
     void apply_shadow(QWidget *widget);

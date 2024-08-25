@@ -9,7 +9,7 @@
 
 
 
-bool flag = false;
+
 
 enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui, edit_ui};
 MainWindow::MainWindow(QWidget *parent)
@@ -35,7 +35,11 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
         ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
     }
 }
-
+void MainWindow :: adjustGraphicsViewSize(){
+    if (ui->graphicsView && ui->graphicsView->scene()) {
+        ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }
+}
 MainWindow::~MainWindow()
 {
     //chessBot->stopEngine();
@@ -158,6 +162,9 @@ void MainWindow::setStyleOnbutton(){
     ui->BackToChooseUIButton->setStyleSheet(buttonStyle);
     apply_shadow(ui->BackToChooseUIButton);
 
+    //Кнопка выбора вернуться в главное меню
+    ui->toMainMenuButton->setStyleSheet("QPushButton{background:transparent; color:\"#ffffff\";} QPushButton:hover{color:\"#808080\"}");
+
     ui->ResignButton->setStyleSheet(buttonStyle+"QPushButton{text-align:Left; padding-left: 15 px;}");
     apply_shadow(ui->ResignButton);
 
@@ -219,6 +226,7 @@ void MainWindow::setStyleOnbutton(){
     for(QPushButton *toolBut: toolsButtons){
         toolBut->setStyleSheet(buttonDiffStyle);
     }
+
 
 }
 
@@ -293,6 +301,12 @@ void MainWindow::on_BackToChooseUIButton_clicked()
      ui->stackedWidget->setCurrentIndex(choose_ui);
 }
 
+void MainWindow::on_toMainMenuButton_clicked()
+{
+    chessGame->resetGame();
+    ui->stackedWidget->setCurrentIndex(base_ui);
+}
+
 void MainWindow::on_ResignButton_clicked()
 {
     if(ui->widget_save->isVisible()){
@@ -305,8 +319,10 @@ void MainWindow::on_ResignButton_clicked()
         ui->ResignButton->setStyleSheet(buttonStyle);
         confirmResign=false;
         ui->stackedWidget->setCurrentIndex(choose_ui);
+        chessGame->resetGame();
 
     }
+
     else{
         ui->cancelResignButton->show();
         ui->widget->setContentsMargins(40, 10, 10, 10);
@@ -336,9 +352,12 @@ void MainWindow::on_saveGameButton_clicked()
 
 void MainWindow::on_EditPuzzleButton_clicked()
 {
+   chessGame->setAllowEdit(true);
    ui->stackedWidget->setCurrentIndex(edit_ui);
    ui->PiecePanel1->setVisible(true);
    ui->PiecePanel1_2->setVisible(true);
+   adjustGraphicsViewSize();
+
 }
 
 void MainWindow::on_BackFromPuzzlesButton_clicked()
@@ -362,9 +381,11 @@ void MainWindow::on_SavePositionButton_clicked()
 void MainWindow::on_BackFromEditButton_clicked()
 {
     if(ui->LoadPositionButton->isVisible()==false){
+        chessGame->setAllowEdit(false);
         ui->stackedWidget->setCurrentIndex(puzzle_ui);
         ui->PiecePanel1->setVisible(false);
         ui->PiecePanel1_2->setVisible(false);
+
     }
     else{
         ui->LoadPositionButton->setVisible(false);
@@ -415,12 +436,15 @@ void MainWindow::on_tool_button_clicked(){
     if(!clickedToolButton){
         return;
     }
-    QString buttonName = clickedToolButton->objectName();
+
     if(lastClickedToolButton){
         lastClickedToolButton->setStyleSheet(buttonDiffStyle);
     }
     clickedToolButton->setStyleSheet(buttonDiffStyleClicked);
     lastClickedToolButton=clickedToolButton;
+
+    QString name_ToolButton=lastClickedToolButton->objectName();
+    chessGame->updateToolButtonName(name_ToolButton);
 }
 
 void MainWindow::onItemClicked(QListWidgetItem *item) {
@@ -430,6 +454,9 @@ void MainWindow::onItemClicked(QListWidgetItem *item) {
     ui->DeletePositionButton->setVisible(true);
     ui->SavePositionButton->setVisible(false);
 }
+
+
+
 
 
 

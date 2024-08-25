@@ -22,10 +22,11 @@ void chessBoard::setupBoard()
     //
     addItem(board_pixmapItem);
 
-
-
-
-
 }
+
+void chessBoard::mousePressEvent(QGraphicsSceneMouseEvent *event){
+      emit clicked(event->scenePos());
+      QGraphicsScene::mousePressEvent(event);
+  }
 
 

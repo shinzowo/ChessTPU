@@ -4,6 +4,7 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 #include <QGraphicsPixmapItem>
+#include <QGraphicsSceneMouseEvent>
 
 class chessBoard : public QGraphicsScene
 {
@@ -15,7 +16,10 @@ public:
 private:
     void setupBoard();
 
-
+protected:
+    void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+signals:
+    void clicked(const QPointF &pos);
 };
 
 #endif // CHESSBOARD_H

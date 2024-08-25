@@ -10,13 +10,17 @@
 
 
 enum{white, black};
-class GridPixmapItem : public QGraphicsPixmapItem
+class GridPixmapItem : public QObject, public QGraphicsPixmapItem
 {
+    Q_OBJECT
 public:
+    int getGridSize();
     GridPixmapItem(const QString pieceName, int gridSize, QGraphicsItem *parent = nullptr);
     void setBoardState(QMap<QString, GridPixmapItem*>* state);
-    QString toChessNotaion(int x_sqr, int y_sqr);
-    QPointF toIntNotaion(QString square);
+    static QString toChessNotaion(int x_sqr, int y_sqr);
+    static QPointF toIntNotaion(QString square);
+    void setLastMove(QString *lastmove);
+    void moveToSquare(QString toSquare);
 protected:
 
     QPainterPath shape() const override;
@@ -38,12 +42,16 @@ private:
 
     QString previousSquare;
     QString newSquare;
+    QString *move;
+
 
     QMap<QString, GridPixmapItem *>*boardState;
 
     qreal originalZvalue;
 
     void updateBoardState();
+signals:
+    void moveIsMade();
 
 };
 
