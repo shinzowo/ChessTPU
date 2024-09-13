@@ -28,5 +28,12 @@ void chessBoard::mousePressEvent(QGraphicsSceneMouseEvent *event){
       emit clicked(event->scenePos());
       QGraphicsScene::mousePressEvent(event);
   }
+void chessBoard::mouseMoveEvent(QGraphicsSceneMouseEvent *event){
+    if (event->buttons() & Qt::LeftButton) {
+      emit clicked(event->scenePos());
+    }
+    QGraphicsScene::mousePressEvent(event);
+
+  }
 
 

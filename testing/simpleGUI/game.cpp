@@ -1,8 +1,10 @@
 #include "game.h"
 #include <QVector>
+#include <QRandomGenerator>
+#include <QDir>
 #include <QDebug>
 
-
+enum{white, black, random};
 game::game(QGraphicsView *view, QObject *parent)
     : QObject(parent), graphicsView(view)
 {
@@ -33,77 +35,139 @@ void game::setGame(){
 
     graphicsView->fitInView(board->sceneRect(), Qt::KeepAspectRatio);
 
-    //стандартная инициализация
+
     allow_edit=false;
+    isBotConnected=false;
+
 }
 
+void game::setupFEN(){
+    if(game_mode=="classic" || game_mode=="three_check"){
+        if(isBotWith){
+            if(player_side==white){
+                FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+            }
+            else if (player_side==black){
+                FEN="RNBKQBNR/PPPPPPPP/8/8/8/8/pppppppp/rnbkqbnr w KQkq - 0 1";
+            }
+        }
+        else{
+            FEN="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        }
+    }
+    else if(game_mode=="fischer"){
+        //вызвать функцию для генерации расстанавки фишера
+    }
+
+}
+
+void game::setupChessBoard(){
+    if(game_mode.size()==0){
+        qDebug()<<"game_mode is not initialised";
+        return;
+    }
+
+    setupFEN();
+    moves_all="";
+
+    int board_X=0,board_Y=0;
+    for(int i=0;i<FEN.size();i++){
+        if(FEN[i].isDigit()){
+            board_X+=FEN[i].digitValue();
+        }
+        else if(FEN[i]!='/' && FEN[i]!=' '){
+            QString piece_name=FEN[i].toLower();
+            if(FEN[i].isUpper()){
+                piece_name="w"+piece_name;
+            }
+            else{
+                piece_name="b"+piece_name;
+            }
+            GridPixmapItem *piecePixmapItem=new GridPixmapItem(piece_name, 200);
+            piecePixmapItem->setLastMove(&lastMove);//связь с lastmove
+
+            connect(piecePixmapItem, &GridPixmapItem::moveIsMade, this, &game::moveIsMade); //connect для вызова события при сделанном ходе
+
+            piecePixmapItem->setBoardState(&boardState, player_side);
+            boardState[piecePixmapItem->toChessNotation(200*board_X, 200*board_Y, player_side)]=piecePixmapItem;
+
+            piecePixmapItem->moveBy(200*board_X, 200*board_Y);
+            if(isBotWith && (player_side!=(piece_name[0]=='b'))){
+                piecePixmapItem->setAcceptedMouseButtons(Qt::NoButton);
+            }
+            else{
+                piecePixmapItem->setFlag(QGraphicsItem::ItemIsMovable);
+            }
+            board->addItem(piecePixmapItem);
+
+            board_X++;
+        }
+        else if(FEN[i]=='/'){
+            board_X=0;
+            board_Y++;
+        }
+        else if(FEN[i]==' '){
+            break;
+        }
+    }
+
+}
 void game::makeMove(QString move){
+    if(move.size()!=4){
+        qDebug()<<"move is incorrect in makeMove";
+    }
     boardState[move.left(2)]->moveToSquare(move);
+    moves_all=moves_all+" "+lastMove; // добавляем этот ход в историю
 }
-void game::startGame(){
-    QVector<QString>whitePieceNames={"wp", "wr", "wn", "wb", "wq", "wk"};
-    QVector<QString>blackPieceNames={"bp", "br", "bn", "bb", "bq", "bk"};
-    for(int i=0;i<8;i++){
-        GridPixmapItem *piecePixmapItem=new GridPixmapItem(whitePieceNames[0], 200);
+void game::startTwoPlayersGame(QString game_mode){
+    this->game_mode=game_mode;
+    this->player_side=white;
+    isBotWith=false;
+    setupChessBoard();
+}
 
-        piecePixmapItem->setLastMove(&lastMove);//связь с lastmove
-        connect(piecePixmapItem, &GridPixmapItem::moveIsMade, this, &game::makeNextMove);
-
-        piecePixmapItem->setBoardState(&boardState);
-        boardState[piecePixmapItem->toChessNotaion(200*i, 1200)]=piecePixmapItem;
-
-        piecePixmapItem->moveBy(200*i, 1200);
-        piecePixmapItem->setFlag(QGraphicsItem::ItemIsMovable);
-        board->addItem(piecePixmapItem);
+void game::startBotGames(QString game_mode, int player_side, int game_difficulty){
+    if(player_side==random){
+        player_side=QRandomGenerator::system()->bounded(2);
     }
+    this->game_mode=game_mode;
+    this->player_side=player_side;
+    this->game_difficulty=game_difficulty;
+    isBotWith=true;
+    setupChessBoard();
 
-    for(int i=0;i<8;i++){
+    //Код для настройки пути до шахматного бота
+    QDir dir(QDir::currentPath());
+    if (dir.cdUp() && dir.cdUp()) { // Поднимаемся на три уровня вверх
+            qDebug() << "Путь до simpleGUI: " << dir.path();
+        } else {
+            qDebug() << "Не удалось подняться до папки simpleGUI";
+        }
+    QDir::setCurrent(dir.path());
+    QString path=QDir::currentPath()+"/fairy-stockfish/fairy-stockfish-largeboard_x86-64-modern.exe";
 
-        GridPixmapItem *piecePixmapItem=new GridPixmapItem(whitePieceNames[(i+1)*(i+1<=5)+(8-i)*(i+1>5)], 200);
-
-        piecePixmapItem->setLastMove(&lastMove);//связь с lastmove
-
-        piecePixmapItem->setBoardState(&boardState);
-        boardState[piecePixmapItem->toChessNotaion(200*i, 1400)]=piecePixmapItem;
-
-        piecePixmapItem->moveBy(200*i, 1400);
-        piecePixmapItem->setFlag(QGraphicsItem::ItemIsMovable);
-        board->addItem(piecePixmapItem);
+    if(!isBotConnected){
+        chessBot=new ChessBot(this);
+        connect(chessBot, &ChessBot::outputReceived, this, &game::onEngineOutputReceived);
+        chessBot->startEngine(path);
+        chessBot->sendCommand("uci");
+        isBotConnected=true;
     }
-
-
-    for(int i=0;i<8;i++){
-        GridPixmapItem *piecePixmapItem=new GridPixmapItem(blackPieceNames[0], 200);
-
-        piecePixmapItem->setLastMove(&lastMove);//связь с lastmove
-
-        piecePixmapItem->setBoardState(&boardState);
-        boardState[piecePixmapItem->toChessNotaion(200*i, 200)]=piecePixmapItem;
-
-        piecePixmapItem->moveBy(200*i, 200);
-        piecePixmapItem->setFlag(QGraphicsItem::ItemIsMovable);
-        board->addItem(piecePixmapItem);
+    chessBot->sendCommand("setoption name Skill Level value "+QString::number(game_difficulty*2));
+    if(game_mode=="three_check"){
+        chessBot->sendCommand("setoption name UCI_Variant value threecheck");
     }
-    for(int i=0;i<8;i++){
-
-        GridPixmapItem *piecePixmapItem=new GridPixmapItem(blackPieceNames[(i+1)*(i+1<=5)+(8-i)*(i+1>5)], 200);
-
-        piecePixmapItem->setLastMove(&lastMove);//связь с lastmove
-
-        piecePixmapItem->setBoardState(&boardState);
-        boardState[piecePixmapItem->toChessNotaion(200*i, 0)]=piecePixmapItem;
-
-        piecePixmapItem->moveBy(200*i, 0);
-        piecePixmapItem->setFlag(QGraphicsItem::ItemIsMovable);
-        board->addItem(piecePixmapItem);
+    chessBot->sendCommand("ucinewgame");
+    if(player_side==black){
+        chessBot->sendCommand("position startpos");                                         //изменить на fen когда доделаем
+        chessBot->sendCommand("go movetime 100");
     }
-    //qDebug()<<boardState.keys();
 }
 
 void game::resetGame(){
-
     for (auto it = boardState.begin(); it != boardState.end(); ++it) {
         GridPixmapItem* piece = it.value();
+        //qDebug()<<"piece:"<<it.key();
         if (piece != nullptr) {
             delete piece; // Удаление объекта
         }
@@ -122,6 +186,14 @@ void game::updateToolButtonName(QString buttonName){
 
 }
 
+void game::setAcceptedButtons(){
+    for (auto it = boardState.begin(); it != boardState.end(); ++it) {
+        GridPixmapItem* piece = it.value();
+        qDebug()<<"piece:"<<it.key();
+        piece->setAcceptedMouseButtons(Qt::AllButtons);
+    }
+}
+
 void game::onBoardClicked(const QPointF &pos){
     if(!allow_edit){
         return;
@@ -133,17 +205,24 @@ void game::onBoardClicked(const QPointF &pos){
     newPos.setY(qFloor(pos.y() / m_gridSize) * m_gridSize);
     bool out_of_border=newPos.x()<0 || newPos.x()>1400 || newPos.y()<0 || newPos.y()>1400;
     qDebug()<<newPos;
-    QString nameSquare=GridPixmapItem::toChessNotaion(newPos.x(),newPos.y());
+    QString nameSquare=GridPixmapItem::toChessNotation(newPos.x(),newPos.y());
     if(tool_ButtonName!="moveButton" && tool_ButtonName!="deleteButton"){
-        if(!boardState.contains(nameSquare) && !out_of_border){
+        if(!out_of_border){
             tool_ButtonName=tool_ButtonName.left(2);
             GridPixmapItem *piecePixmapItem=new GridPixmapItem(tool_ButtonName, m_gridSize);
+            piecePixmapItem->setLastMove(&lastMove);//связь с lastmove
+
+            connect(piecePixmapItem, &GridPixmapItem::moveIsMade, this, &game::moveIsMade); //connect для вызова события при сделанном ходе
 
             // Временно отключаем обработку событий мыши
             piecePixmapItem->setAcceptedMouseButtons(Qt::NoButton);
 
-            piecePixmapItem->setBoardState(&boardState);
-            boardState[GridPixmapItem::toChessNotaion(newPos.x(), newPos.y())]=piecePixmapItem;
+            piecePixmapItem->setBoardState(&boardState, white);
+
+            if(boardState.contains(nameSquare)){
+                delete boardState.take(nameSquare);
+            }
+            boardState[nameSquare]=piecePixmapItem;
 
             piecePixmapItem->setPos(newPos.x(), newPos.y());
             piecePixmapItem->setFlag(QGraphicsItem::ItemIsMovable);
@@ -163,7 +242,26 @@ void game::onBoardClicked(const QPointF &pos){
     }
 }
 
-void game::makeNextMove(){
-    qDebug()<<"method makeNextMove is called";
+void game::moveIsMade(){
+    //qDebug()<<boardState.keys();
+    //qDebug()<<"method makeNextMove is called";
+
+    moves_all=moves_all+" "+lastMove; //добавляем ход, который сделал игрок в историю
+    if(!isBotWith){
+        return;
+    }
+    chessBot->sendCommand("position startpos moves "+moves_all);                        //изменить на fen когда доделаем
+    chessBot->sendCommand("go movetime 100");
+
+}
+void game::onEngineOutputReceived(const QString &output)
+{
+    qDebug() << "Engine output:" << output;
+    if(output.contains("bestmove")){
+        bestmove=output.mid(output.indexOf("bestmove")+9, 4);
+        qDebug()<<"bestmove: "<<bestmove;
+        makeMove(bestmove);
+    }
+    // Обработка вывода движка
 }
 

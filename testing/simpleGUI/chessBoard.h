@@ -18,6 +18,7 @@ private:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
 signals:
     void clicked(const QPointF &pos);
 };

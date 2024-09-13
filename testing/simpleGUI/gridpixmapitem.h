@@ -9,16 +9,16 @@
 
 
 
-enum{white, black};
+
 class GridPixmapItem : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
     int getGridSize();
     GridPixmapItem(const QString pieceName, int gridSize, QGraphicsItem *parent = nullptr);
-    void setBoardState(QMap<QString, GridPixmapItem*>* state);
-    static QString toChessNotaion(int x_sqr, int y_sqr);
-    static QPointF toIntNotaion(QString square);
+    void setBoardState(QMap<QString, GridPixmapItem*>* state, int player_side);
+    static QString toChessNotation(int x_sqr, int y_sqr, int player_side=0);
+    static QPointF toIntNotation(QString square, int player_side=0);
     void setLastMove(QString *lastmove);
     void moveToSquare(QString toSquare);
 protected:
@@ -37,6 +37,7 @@ private:
 
     int m_gridSize;
     int side;
+    int player_side;
 
     QPointF previousPosition;
 

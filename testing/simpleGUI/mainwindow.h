@@ -38,11 +38,7 @@ private slots:
 
     void on_BackButton_clicked();
 
-    void on_WhiteButton_clicked();
-
-    void on_RandomButton_clicked();
-
-    void on_BlackButton_clicked();
+    void on_BotGameStart_clicked();
 
     void on_BackToChooseUIButton_clicked();
 
@@ -89,21 +85,18 @@ private:
     void setStyleOnbutton();
     void apply_shadow(QWidget *widget);
 
-
-    QString baseColorButton;
     QString buttonStyle;
-    QString text_align_style;
 
-    QString clickedDiffButton;
     QString buttonDiffStyle;
     QString buttonDiffStyleClicked;
-    QString textColor;
-    QString hoverColor;
 
     QString fileName;
 
-
+    QString game_mode;
+    int player_side;
     int game_diff;
+
+
     QPushButton *lastClickedDiffButton;
     QPushButton *lastClickedToolButton;
     bool confirmResign=false;

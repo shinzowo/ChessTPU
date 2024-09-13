@@ -14,9 +14,9 @@ ChessBot::~ChessBot()
 
 void ChessBot::startEngine(const QString &enginePath){
     process->start(enginePath);
-        if (!process->waitForStarted()) {
-            qDebug() << "Failed to start engine!";
-        }
+    if (!process->waitForStarted()) {
+        qDebug() << "Failed to start engine!";
+    }
 }
 void ChessBot::sendCommand(const QString &command)
 {

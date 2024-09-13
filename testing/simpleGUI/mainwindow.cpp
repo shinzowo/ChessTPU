@@ -8,10 +8,8 @@
 #include <QList>
 
 
-
-
-
 enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui, edit_ui};
+enum{white, black, random};
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)/*,
@@ -21,12 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
     setupBaseParametres();
     chessGame=new game(ui->graphicsView, this);
 
-
-
-
-
-
 }
+
 void MainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
     if (ui->graphicsView && ui->graphicsView->scene()) {
@@ -84,6 +78,11 @@ void MainWindow::setupBaseParametres(){
     connect(ui->diff_6, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
     connect(ui->diff_7, &QPushButton::clicked, this, &MainWindow::on_diffButton_clicked);
 
+    //Коннект кнопок общей функции для выбора стороны против бота
+    connect(ui->WhiteButton, &QPushButton::clicked, this, &MainWindow::on_BotGameStart_clicked);
+    connect(ui->RandomButton, &QPushButton::clicked, this, &MainWindow::on_BotGameStart_clicked);
+    connect(ui->BlackButton, &QPushButton::clicked, this, &MainWindow::on_BotGameStart_clicked);
+
     //Коннект кнопок общей функции для редактора
 
     connect(ui->moveButton, &QPushButton::clicked, this, &MainWindow::on_tool_button_clicked);
@@ -112,10 +111,10 @@ void MainWindow::setupBaseParametres(){
 }
 
 void MainWindow::setStyleOnbutton(){
-    baseColorButton="#3D4E59";
-    textColor="#ffffff";
-    hoverColor="#232E35";
-    clickedDiffButton="#6ACF68";
+    QString baseColorButton="#3D4E59";
+    QString textColor="#ffffff";
+    QString hoverColor="#232E35";
+    QString clickedDiffButtonColor="#6ACF68";
 
     buttonStyle=QString("QPushButton{background-color: %1; color: %2; border-style:outset; border-radius:5px;"
                         "}"
@@ -194,7 +193,7 @@ void MainWindow::setStyleOnbutton(){
                         "}"
                         "QPushButton:hover{background-color: %3}").arg(baseColorButton).arg(textColor).arg(hoverColor);
     buttonDiffStyleClicked=QString("QPushButton{background-color: %1; color: %2; border-style:outset; border-radius:1px;"
-                        "}").arg(clickedDiffButton).arg(textColor);
+                        "}").arg(clickedDiffButtonColor).arg(textColor);
 
     ui->diff_1->setStyleSheet(buttonDiffStyle);
     apply_shadow(ui->diff_1);
@@ -240,16 +239,19 @@ void MainWindow::apply_shadow(QWidget *widget){
 
 void MainWindow::on_ClassicGameButton_clicked()
 {
+    game_mode="classic";
     ui->stackedWidget->setCurrentIndex(choose_ui);
 }
 
 void MainWindow::on_FischerChessButton_clicked()
 {
+    game_mode="fischer";
     ui->stackedWidget->setCurrentIndex(choose_ui);
 }
 
 void MainWindow::on_ThreeCheckButton_clicked()
 {
+    game_mode="three_check";
     ui->stackedWidget->setCurrentIndex(choose_ui);
 }
 
@@ -268,7 +270,7 @@ void MainWindow::on_QuitButton_clicked()
 void MainWindow::on_TwoPlayersButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(game_ui);
-    chessGame->startGame();
+    chessGame->startTwoPlayersGame(game_mode);
 }
 
 void MainWindow::on_BotButton_clicked()
@@ -281,18 +283,24 @@ void MainWindow::on_BackButton_clicked()
     ui->stackedWidget->setCurrentIndex(base_ui);
 }
 
-void MainWindow::on_WhiteButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(game_ui);
-}
+void MainWindow::on_BotGameStart_clicked(){
+    QPushButton *clickedSideButton=qobject_cast<QPushButton*>(sender());
+    if(clickedSideButton==nullptr){
+        qDebug()<<"BotGameStart_clicked slot use nullptr";
+        return;
+    }
+    QString sideButtonName=clickedSideButton->objectName();
+    if(sideButtonName=="WhiteButton"){
+        player_side=white;
+    }
+    else if(sideButtonName=="BlackButton"){
+        player_side=black;
+    }
+    else if(sideButtonName=="RandomButton"){
+        player_side=random;
+    }
 
-void MainWindow::on_RandomButton_clicked()
-{
-    ui->stackedWidget->setCurrentIndex(game_ui);
-}
-
-void MainWindow::on_BlackButton_clicked()
-{
+    chessGame->startBotGames(game_mode, player_side, game_diff);
     ui->stackedWidget->setCurrentIndex(game_ui);
 }
 
@@ -363,6 +371,7 @@ void MainWindow::on_EditPuzzleButton_clicked()
 void MainWindow::on_BackFromPuzzlesButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(base_ui);
+    chessGame->resetGame();
 }
 
 void MainWindow::on_SavePositionButton_clicked()
@@ -385,7 +394,7 @@ void MainWindow::on_BackFromEditButton_clicked()
         ui->stackedWidget->setCurrentIndex(puzzle_ui);
         ui->PiecePanel1->setVisible(false);
         ui->PiecePanel1_2->setVisible(false);
-
+        chessGame->setAcceptedButtons();
     }
     else{
         ui->LoadPositionButton->setVisible(false);
@@ -413,9 +422,11 @@ void MainWindow::on_diffButton_clicked(){
         return;
     }
     QString buttonName = clickedDiffButton->objectName();
+    game_diff=buttonName.right(1).toInt();
     if(lastClickedDiffButton){
         lastClickedDiffButton->setStyleSheet(buttonDiffStyle);
     }
+
     clickedDiffButton->setStyleSheet(buttonDiffStyleClicked);
     lastClickedDiffButton=clickedDiffButton;
 }
