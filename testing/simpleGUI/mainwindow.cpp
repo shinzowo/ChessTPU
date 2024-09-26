@@ -5,7 +5,11 @@
 #include <QLabel>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QFileDialog>
+#include <QDir>
+#include <QFile>
 #include <QList>
+
 
 
 enum{base_ui, choose_ui, side_ui, game_ui, puzzle_ui, edit_ui};
@@ -275,7 +279,39 @@ void MainWindow::on_TwoPlayersButton_clicked()
 
 void MainWindow::on_BotButton_clicked()
 {
+     //Код для настройки пути до шахматного бота
+    if(botPath.isEmpty()){
+    QDir dir(QDir::currentPath());
+    if (dir.cdUp() && dir.cdUp()) { // Поднимаемся на три уровня вверх
+            qDebug() << "Путь до simpleGUI: " << dir.path();
+        } else {
+            qDebug() << "Не удалось подняться до папки simpleGUI";
+        }
+    QDir::setCurrent(dir.path());
+    QString chessbotFilePath=QDir::currentPath()+"/chessbotpath.txt";
+    QFile file(chessbotFilePath);
+    if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
+            // Если не удается открыть файл, сообщаем об ошибке
+            QMessageBox::warning(nullptr, "Ошибка", "Не удается открыть файл!");
+            return;
+    }
+    QTextStream in(&file);
+    QString path=in.readAll();
+    qDebug()<<"Path is:"<<path;
+    if(path.isEmpty()){
+        QMessageBox::information(nullptr, "Выбор шахматного движка",
+                                     "Пожалуйста, выберите файл шахматного движка Fairy-Stockfish.");
+        botPath=openFileDialog();
+        QTextStream out(&file);
+        out << botPath; // Записываем новый путь в файл
+    }
+    else{
+        botPath=path;
+    }
+    }
+    if(!botPath.isEmpty()){
     ui->stackedWidget->setCurrentIndex(side_ui);
+    }
 }
 
 void MainWindow::on_BackButton_clicked()
@@ -300,7 +336,7 @@ void MainWindow::on_BotGameStart_clicked(){
         player_side=random;
     }
 
-    chessGame->startBotGames(game_mode, player_side, game_diff);
+    chessGame->startBotGames(game_mode, player_side, game_diff, botPath);
     ui->stackedWidget->setCurrentIndex(game_ui);
 }
 
@@ -464,6 +500,12 @@ void MainWindow::onItemClicked(QListWidgetItem *item) {
     ui->LoadPositionButton->setVisible(true);
     ui->DeletePositionButton->setVisible(true);
     ui->SavePositionButton->setVisible(false);
+}
+
+QString MainWindow::openFileDialog(){
+    QString fileName = QFileDialog::getOpenFileName(this,
+                tr("Open File"), "/home", tr("All Files (*);;"));
+    return fileName;
 }
 
 

@@ -15,7 +15,7 @@ class game : public QObject
 public:
     explicit game(QGraphicsView *view, QObject *parent);
     void startTwoPlayersGame(QString game_mode);
-    void startBotGames(QString game_mode, int player_side, int game_difficulty);
+    void startBotGames(QString game_mode, int player_side, int game_difficulty, QString path);
     void resetGame();
     void saveGame();
     void setAllowEdit(bool edit);
