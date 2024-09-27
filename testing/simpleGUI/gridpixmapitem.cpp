@@ -68,7 +68,6 @@ void GridPixmapItem::mouseReleaseEvent(QGraphicsSceneMouseEvent *event){
 
                     setPos(previousPosition);
 
-
                 }
                 else{
 

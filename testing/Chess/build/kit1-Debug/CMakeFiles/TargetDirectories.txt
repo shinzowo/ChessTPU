@@ -1,9 +1,0 @@
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/Chess.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/edit_cache.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/rebuild_cache.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/list_install_components.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/install.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/install/local.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/install/strip.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/Chess_autogen_timestamp_deps.dir
-D:/projects/qt/ChessTPU/Chess/build/kit1-Debug/CMakeFiles/Chess_autogen.dir

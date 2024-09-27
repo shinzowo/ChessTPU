@@ -6,6 +6,7 @@
 #include <QPainterPath>
 #include <QVariant>
 #include <QString>
+#include "ChessLogic.h"
 
 
 
@@ -31,7 +32,7 @@ protected:
 
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
 private:
-
+    Chess::Piece *piece;
 
     QPixmap piecePixmap;
 
