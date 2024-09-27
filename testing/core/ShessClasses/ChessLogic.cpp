@@ -211,17 +211,38 @@ std::vector<std::unique_ptr<Chess::Move>> Chess::King::getRelativeMoves(const Ga
         Cell next_cell = relativeCell(cell, direction.first, direction.second);
         if (isLegalCell(next_cell) && (game.board[next_cell] == nullptr || game.board[next_cell]->color != this->color))
         {
-            result.push_back(std::make_unique<Move>(Move(cell, next_cell)));
+            result.push_back(std::unique_ptr<Move>(chooseMoveType(cell, next_cell)));
         }
     }
+    if (this->isFirstMove && !game.isKingInCheck(this->color))
+    {
+        // Check for kingside castling
+        if ((this->color == Color::White && ((game.castling_flags & CastlingRights::WhiteKing) == CastlingRights::WhiteKing)) ||
+            (this->color == Color::Black && ((game.castling_flags & CastlingRights::BlackKing) == CastlingRights::BlackKing)))
+        {
+            Cell rook_cell = this->color == Color::White ? Cell::h1 : Cell::h8;
+            Cell path1 = relativeCell(cell, 0, 1);
+            Cell path2 = relativeCell(cell, 0, 2);
+            if (game.board[path1] == nullptr && game.board[path2] == nullptr && !game.isCellAttacked(path1, this->color) && !game.isCellAttacked(path2, this->color))
+            {
+                result.push_back(std::make_unique<MoveCastling>(MoveCastling(cell, path2, CastlingType::KingSide)));
+            }
+        }
 
-    // if(isFirstMove){
-    //     CastlingRights castling = game.castling_flags & (this->color == Color::White ? CastlingRights::WhiteAll : CastlingRights::BlackAll);
-
-    //     if((game.castling_flags & (this->color == Color::White ? CastlingRights::WhiteQueen : CastlingRights::BlackKing)) != CastlingRights::None){
-
-    //     }
-    // }
+        // Check for queenside castling
+        if ((this->color == Color::White && ((game.castling_flags & CastlingRights::WhiteQueen) == CastlingRights::WhiteQueen)) ||
+            (this->color == Color::Black && ((game.castling_flags & CastlingRights::BlackQueen) == CastlingRights::BlackQueen)))
+        {
+            Cell rook_cell = this->color == Color::White ? Cell::a1 : Cell::a8;
+            Cell path1 = relativeCell(cell, 0, -1);
+            Cell path2 = relativeCell(cell, 0, -2);
+            Cell path3 = relativeCell(cell, 0, -3);
+            if (game.board[path1] == nullptr && game.board[path2] == nullptr && game.board[path3] == nullptr && !game.isCellAttacked(path1, this->color) && !game.isCellAttacked(path2, this->color))
+            {
+                result.push_back(std::make_unique<MoveCastling>(MoveCastling(cell, path2, CastlingType::QueenSide)));
+            }
+        }
+    }
 
     return result;
 }
@@ -372,6 +393,34 @@ bool Chess::Game::checkMove(const Move &move)
     return !isKingInCheck(active_player);
 }
 
+std::vector<std::unique_ptr<Chess::Move>> Chess::Game::getMoves()
+{
+    std::vector<std::unique_ptr<Chess::Move>> result;
+    for (int i = 0; i < 64; ++i)
+    {
+        Cell cell = static_cast<Cell>(i);
+        if (board[cell])
+        {
+            std::vector<std::unique_ptr<Chess::Move>> moves = board[cell]->getRelativeMoves(*this, cell);
+            for (int j = 0; j < moves.size(); j++)
+            {
+                result.push_back(std::move(moves[i]));
+            }
+        }
+    }
+
+    return result;
+}
+
+void Chess::Game::performMove(const Move &move)
+{
+    board[move.to] = board[move.from];
+    board[move.from] = nullptr;
+
+    move.special(*this);
+    active_player = active_player == Color::White ? Color::Black : Color::White;
+}
+
 void Chess::MoveRookFirst::special(Game &game) const
 {
     switch (this->from)
@@ -447,5 +496,49 @@ bool Chess::Game::isKingInCheck(Color kingColor) const
         }
     }
 
+    return false;
+}
+
+void Chess::MoveCastling::special(Game &game) const
+{
+    if (castlingType == CastlingType::KingSide)
+    {
+        Cell rookFrom = makeCell(row(from), 7); // h-file rook
+        Cell rookTo = makeCell(row(from), 5);   // f-file
+        game.board[rookTo] = game.board[rookFrom];
+        game.board[rookFrom] = nullptr;
+    }
+    else if (castlingType == CastlingType::QueenSide)
+    {
+        Cell rookFrom = makeCell(row(from), 0); // a-file rook
+        Cell rookTo = makeCell(row(from), 3);   // d-file
+        game.board[rookTo] = game.board[rookFrom];
+        game.board[rookFrom] = nullptr;
+    }
+
+    MoveKingFirst(from, to).special(game);
+}
+
+bool Chess::Game::isCellAttacked(Cell cell, Color color) const
+{
+    for (int r = 0; r < 8; ++r)
+    {
+        for (int c = 0; c < 8; ++c)
+        {
+            Cell attacker_cell = makeCell(r, c);
+            const Piece *opponentPiece = next_board[attacker_cell];
+            if (opponentPiece && opponentPiece->color != color)
+            {
+                std::vector<std::unique_ptr<Move>> possibleMoves = opponentPiece->getRelativeMoves(*this, attacker_cell);
+                for (const auto &move : possibleMoves)
+                {
+                    if (move->to == cell)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
     return false;
 }

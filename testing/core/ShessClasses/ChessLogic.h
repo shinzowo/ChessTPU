@@ -25,6 +25,12 @@ namespace Chess
         White
     };
 
+    enum class CastlingType : uint8_t
+    {
+        KingSide,
+        QueenSide
+    };
+
     enum class Cell : uint8_t
     {
         // clang-format off
@@ -64,13 +70,21 @@ namespace Chess
         ThreeChecks
     };
 
+    enum class EndOfGame : uint8_t
+    {
+        Continue,
+        WhiteWon,
+        Draw,
+        BlackWon
+    };
+
     class Move
     {
     public:
         Move(Cell from, Cell to) : from(from), to(to) {}
         virtual void special(Game &game) const;
 
-    //protected:
+        // protected:
         Cell from;
         Cell to;
     };
@@ -101,6 +115,16 @@ namespace Chess
     public:
         MoveEnPassant(Cell from, Cell to) : Move(from, to) {}
         void special(Game &game) const override;
+    };
+
+    class MoveCastling : public Move
+    {
+    public:
+        MoveCastling(Cell from, Cell to, CastlingType type) : Move(from, to), castlingType(type) {}
+        void special(Game &game) const override;
+
+    private:
+        CastlingType castlingType;
     };
 
     class Piece
@@ -206,7 +230,10 @@ namespace Chess
         // Game(Color _active_player, const Board &_board = Board::StartingPosition(), CastlingRights _castling_flags = CastlingRights::All, std::optional<Cell> _ep = std::nullopt);
         Game(const std::string &fen);
         bool checkMove(const Move &move);
+        std::vector<std::unique_ptr<Move>> getMoves();
+        void performMove(const Move &move);
         bool isKingInCheck(Color kingColor) const;
+        bool isCellAttacked(Cell cell, Color color) const;
         // private:
         Board board;
         Board next_board;
