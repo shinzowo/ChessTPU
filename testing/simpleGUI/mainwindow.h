@@ -100,6 +100,10 @@ private:
     QPushButton *lastClickedDiffButton;
     QPushButton *lastClickedToolButton;
     bool confirmResign=false;
+
+    QString openFileDialog();
+    QString botPath;
+
 protected:
     void resizeEvent(QResizeEvent *event) override;
 };

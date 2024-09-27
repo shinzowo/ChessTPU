@@ -2,6 +2,9 @@
 #include <QVector>
 #include <QRandomGenerator>
 #include <QDir>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 #include <QDebug>
 
 enum{white, black, random};
@@ -126,7 +129,7 @@ void game::startTwoPlayersGame(QString game_mode){
     setupChessBoard();
 }
 
-void game::startBotGames(QString game_mode, int player_side, int game_difficulty){
+void game::startBotGames(QString game_mode, int player_side, int game_difficulty, QString path){
     if(player_side==random){
         player_side=QRandomGenerator::system()->bounded(2);
     }
@@ -136,16 +139,11 @@ void game::startBotGames(QString game_mode, int player_side, int game_difficulty
     isBotWith=true;
     setupChessBoard();
 
-    //Код для настройки пути до шахматного бота
-    QDir dir(QDir::currentPath());
-    if (dir.cdUp() && dir.cdUp()) { // Поднимаемся на три уровня вверх
-            qDebug() << "Путь до simpleGUI: " << dir.path();
-        } else {
-            qDebug() << "Не удалось подняться до папки simpleGUI";
-        }
-    QDir::setCurrent(dir.path());
-    QString path=QDir::currentPath()+"/fairy-stockfish/fairy-stockfish-largeboard_x86-64-modern.exe";
 
+
+    if(path.isEmpty()){
+        QMessageBox::warning(nullptr, "Ошибка", "Путь до шахматного бота пустой");
+    }
     if(!isBotConnected){
         chessBot=new ChessBot(this);
         connect(chessBot, &ChessBot::outputReceived, this, &game::onEngineOutputReceived);
@@ -264,4 +262,6 @@ void game::onEngineOutputReceived(const QString &output)
     }
     // Обработка вывода движка
 }
+
+
 
