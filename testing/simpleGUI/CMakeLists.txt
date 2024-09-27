@@ -12,12 +12,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
+add_subdirectory("../core/ChessClasses" "${CMAKE_BINARY_DIR}/ChessClasses")
+
+
 set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
-        SquareWidget.h SquareWidget.cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR})
@@ -27,10 +29,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(ChessM
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        mainwindow3.ui
         res.qrc
-        DraggableWidget.cpp
-        DraggableWidget.h
         game.h game.cpp
         chessBoard.h
         chessBoard.cpp
@@ -59,7 +58,9 @@ else()
     endif()
 endif()
 
-target_link_libraries(ChessM PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_include_directories(ChessM PRIVATE ../core/ChessClasses)
+
+target_link_libraries(ChessM PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ChessClasses)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an

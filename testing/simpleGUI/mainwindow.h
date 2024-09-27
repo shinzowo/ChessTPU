@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QListWidgetItem>
+#include <QDir>
 #include "game.h"
 //#include "ChessBot.h"
 
@@ -74,6 +75,8 @@ private slots:
 
     void on_toMainMenuButton_clicked();
 
+    void onAboutToQuit();
+
 private:
 
     Ui::MainWindow *ui;
@@ -84,6 +87,8 @@ private:
     void setupBaseParametres();
     void setStyleOnbutton();
     void apply_shadow(QWidget *widget);
+    void saveFEN();
+    void continueGame();
 
     QString buttonStyle;
 
@@ -91,8 +96,10 @@ private:
     QString buttonDiffStyleClicked;
 
     QString fileName;
+    QDir Dir;
 
     QString game_mode;
+    bool isBotWith=false;
     int player_side;
     int game_diff;
 

@@ -6,7 +6,6 @@
 #include <QMessageBox>
 #include <QInputDialog>
 #include <QFileDialog>
-#include <QDir>
 #include <QFile>
 #include <QList>
 
@@ -22,6 +21,16 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setupBaseParametres();
     chessGame=new game(ui->graphicsView, this);
+    QDir dir(QDir::currentPath());
+    // if (dir.cdUp() && dir.cdUp()) { // Поднимаемся на три уровня вверх
+    //         qDebug() << "Путь до simpleGUI: " << dir.path();
+    //     } else {
+    //         qDebug() << "Не удалось подняться до папки simpleGUI";
+    //     }
+    QDir::setCurrent(dir.path());
+    connect(qApp, &QApplication::aboutToQuit, this, &MainWindow::onAboutToQuit);
+    continueGame();
+
 
 }
 
@@ -241,6 +250,43 @@ void MainWindow::apply_shadow(QWidget *widget){
     widget->setGraphicsEffect(shadowEffect);
 }
 
+void MainWindow::saveFEN(){
+    QString FENSave=QDir::currentPath()+"/FEN.txt";
+    QFile file(FENSave);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            // Если не удается открыть файл, сообщаем об ошибке
+            QMessageBox::warning(nullptr, "Ошибка", "Не удается открыть файл!");
+            return;
+    }
+    QTextStream out(&file);
+    out << chessGame->getFEN();
+    file.close();
+}
+
+void MainWindow::continueGame(){
+    QString filePath = QDir::currentPath() + "/FEN.txt";
+            QFile file(filePath);
+
+            if (file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+                // Проверяем, не пустой ли файл
+                QTextStream in(&file);
+                QString fileContent = in.readAll();
+                file.close();
+
+                if (!fileContent.isEmpty()) {
+                    // Если файл не пустой, выводим окно с вопросом
+                    int result = QMessageBox::question(this, "Вы не закончили прошлую игру",
+                                                       "Хотите продолжить?",
+                                                       QMessageBox::Yes | QMessageBox::No);
+
+                    if (result == QMessageBox::Yes) {
+                        return;
+                    }
+                }
+            } else {
+                QMessageBox::warning(this, "Ошибка", "Не удалось открыть файл LastGameSave.txt.");
+            }
+}
 void MainWindow::on_ClassicGameButton_clicked()
 {
     game_mode="classic";
@@ -275,19 +321,13 @@ void MainWindow::on_TwoPlayersButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(game_ui);
     chessGame->startTwoPlayersGame(game_mode);
+
 }
 
 void MainWindow::on_BotButton_clicked()
 {
      //Код для настройки пути до шахматного бота
     if(botPath.isEmpty()){
-    QDir dir(QDir::currentPath());
-    if (dir.cdUp() && dir.cdUp()) { // Поднимаемся на три уровня вверх
-            qDebug() << "Путь до simpleGUI: " << dir.path();
-        } else {
-            qDebug() << "Не удалось подняться до папки simpleGUI";
-        }
-    QDir::setCurrent(dir.path());
     QString chessbotFilePath=QDir::currentPath()+"/chessbotpath.txt";
     QFile file(chessbotFilePath);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text)) {
@@ -320,6 +360,7 @@ void MainWindow::on_BackButton_clicked()
 }
 
 void MainWindow::on_BotGameStart_clicked(){
+
     QPushButton *clickedSideButton=qobject_cast<QPushButton*>(sender());
     if(clickedSideButton==nullptr){
         qDebug()<<"BotGameStart_clicked slot use nullptr";
@@ -335,7 +376,7 @@ void MainWindow::on_BotGameStart_clicked(){
     else if(sideButtonName=="RandomButton"){
         player_side=random;
     }
-
+    isBotWith=true;
     chessGame->startBotGames(game_mode, player_side, game_diff, botPath);
     ui->stackedWidget->setCurrentIndex(game_ui);
 }
@@ -469,6 +510,7 @@ void MainWindow::on_diffButton_clicked(){
 
 void MainWindow::on_FENButton_clicked()
 {
+    saveFEN();
     ui->widget_save->hide();
 }
 
@@ -506,6 +548,26 @@ QString MainWindow::openFileDialog(){
     QString fileName = QFileDialog::getOpenFileName(this,
                 tr("Open File"), "/home", tr("All Files (*);;"));
     return fileName;
+}
+
+void MainWindow::onAboutToQuit(){
+    if(ui->stackedWidget->currentIndex()!=game_ui){
+        return;
+    }
+    QString LastGameSave=QDir::currentPath()+"/LastGameSave.txt";
+    QFile file(LastGameSave);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            // Если не удается открыть файл, сообщаем об ошибке
+            QMessageBox::warning(nullptr, "Ошибка", "Не удается открыть файл!");
+            return;
+    }
+    QTextStream out(&file);
+    out << game_mode<<"\n";
+    if(isBotWith){
+        out<<player_side<<"\n"<<game_diff<<"\n";
+    }
+    out << chessGame->getFEN();
+    file.close();
 }
 
 
