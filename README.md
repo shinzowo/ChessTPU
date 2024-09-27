@@ -1,2 +1,0 @@
-# ChessTPU
-Chess desktop app
